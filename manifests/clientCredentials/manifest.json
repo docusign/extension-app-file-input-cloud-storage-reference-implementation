@@ -1,0 +1,100 @@
+{
+  "name": "File Input Cloud Storage",
+  "description": {
+    "short": "App for file input from cloud storage",
+    "long": "This app is designed to retrieve files from a cloud storage system."
+  },
+  "termsOfServiceUrl": "https://www.fontara.com/tos",
+	"privacyUrl": "https://www.fontara.com/privacy-security",
+	"supportUrl": "https://www.fontara.com/support",
+	"publisher": {
+		"name": "Fontara",
+		"email": "support@fontara.com"
+	},
+  
+  "connections": [
+	  {
+		"name": "authentication",
+		"description": "Secure connection to sample extension app",
+		"type": "oauth2",
+		"params": {
+		  "provider": "CUSTOM",
+		  "scopes": [],
+		  "grantType": "client_credentials",
+		  "clientId": "<CLIENT_ID>",
+		  "clientSecret": "<CLIENT_SECRET>",
+		  "customConfig": {
+          "authorizationMethod": "header",
+          "authorizationParams": {},
+          "requiredScopes": [],
+          "scopeSeparator": " ",
+          "tokenUrl": "<PROXY_BASE_URL>/api/oauth/token"
+        }
+		  }
+	  }
+	],
+  "extensions": [
+		{
+			"name": "My File Input Cloud Storage Extension",
+			"description": "Used to retrieve files from cloud storage",
+			"template": "FileIO.Version1.FileInputCloudStorage",
+			"actionReferences": [
+				"search",
+				"list-directory-contents",
+				"list-drives",
+				"get-file"
+			],
+			"capabilities": [
+				"FileIO.Version1.ListDrives"
+			]
+		}
+	],
+	"actions": [
+		{
+			"name": "search",
+			"description": "This is a description of my search action",
+			"template": "FileIO.Version1.Search",
+			"connectionsReference": "authentication",
+			"params": {
+				"uri": "<PROXY_BASE_URL>/api/search"
+			}
+		},
+		{
+			"name": "list-directory-contents",
+			"description": "This is a description of my list directory contents action",
+			"template": "FileIO.Version1.ListDirectoryContents",
+			"connectionsReference": "authentication",
+			"params": {
+				"uri": "<PROXY_BASE_URL>/api/listdirectorycontents"
+			}
+		},
+		{
+			"name": "list-drives",
+			"description": "This is a description of my list drives action",
+			"template": "FileIO.Version1.ListDrives",
+			"connectionsReference": "authentication",
+			"params": {
+				"uri": "<PROXY_BASE_URL>/api/listdrives"
+			}
+		},
+		{
+			"name": "get-file",
+			"description": "This is a description of my get file action",
+			"template": "FileIO.Version1.GetFile",
+			"connectionsReference": "authentication",
+            "contractType": "action-with-callback",
+			"params": {
+				"uri": "<PROXY_BASE_URL>/api/getfile"
+			}
+		}
+	],
+  "publicationRegions": [
+    "US"
+  ],
+  "distribution": "PRIVATE",
+  "icon": {
+    "data": "iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAACXBIWXMAACxLAAAsSwGlPZapAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAADcSURBVHgB7dwxCsMwEADBc8j/v+zUgTRJZNY2M6ULF1oOhECaAQAAAAAA7m778G0fjvS25o8hJUBMgJgAMQFi23xvX/ivK1uyDiYgJkBMgJgAMQFizzm/f8+mTr07MwExAWICxASICRC7wi7o1mdMJiAmQEyAmAAxAWICxASICRATICZATICYADEBYgLEBIgJEBMgJkBMgJgAMQFiAsQEiAkQEyAmQEyAmAAxAWICxASICRATICZATICYADEBYgLEBIitvCfsxd0fmICYADEBYgLEBAAAAAAAADjYCwxUBYWYirDwAAAAAElFTkSuQmCC",
+    "mediaType": "image/png"
+  },
+  "screenshots": []
+}
