@@ -16,8 +16,6 @@ This reference implementation supports two [authentication](https://developers.d
 * [Authorization Code Grant](https://developers.docusign.com/extension-apps/build-an-extension-app/it-infrastructure/authorization/#authorization-code-grant) – can be used with both [public and private extension apps](https://developers.docusign.com/extension-apps/extension-apps-101/choosing-private-distribution/) and in all [supported regions](https://developers.docusign.com/extension-apps/extension-apps-101/globalization/).
 * [Client Credentials Grant](https://developers.docusign.com/extension-apps/build-an-extension-app/it-infrastructure/authorization/#client-credentials-grant) – available only with private extension apps that are based in the US.
 
-**Note:** In the current release, only Client Credentials Grant is supported with file input from cloud storage.
-
 ## Hosted version (no setup required)
 You can use the hosted version of this reference implementation by directly uploading the appropriate manifest file located in the [manifests/hosted/](manifests/hosted) folder to the Docusign Developer Console. See [Upload your manifest and create the extension app](#3-upload-your-manifest-and-create-the-extension-app).
 
@@ -134,6 +132,7 @@ This reference implementation simulates an external cloud storage service. After
 You can run these tests from the Developer Console to test each supported action and capability for the extension. These tests allow you to construct the request body and see the response.
 #### [Functional tests](https://developers.docusign.com/extension-apps/build-an-extension-app/test/functional-tests/)
 This type of test shows how the extension functions when invoked from an [extension point](https://developers.docusign.com/extension-apps/extension-apps-101/concepts/extensions-and-extension-points/#extension-points). For file input cloud storage, the extension point is [Navigator](https://support.docusign.com/s/document-item?bundleId=pqz1702943441912&topicId=adf1702945446135.html).
+
 
 
 
