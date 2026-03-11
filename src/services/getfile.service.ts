@@ -9,23 +9,22 @@ export const getFile = (req: IReq<GetFileBody>, res: IRes) => {
     const headerString = req.headers['x-docusign-session'];
 
     if (headerString) {
-    try {
-      const buff = Buffer.from(processData(headerString), 'base64');
-      const decodedheader = buff.toString('utf-8');
-      const parsed = JSON.parse(decodedheader);
-      const fileUrl = parsed.filesApiUrl;
-      const apiUrl = parsed.callbackUrl;
-      const userSessionToken = parsed.sessionToken;
+      try {
+        const buff = Buffer.from(processData(headerString), 'base64');
+        const decodedheader = buff.toString('utf-8');
+        const parsed = JSON.parse(decodedheader);
+        const fileUrl = validateAndNormalizeUrl(parsed.filesApiUrl, 'filesApiUrl');
+        const apiUrl = validateAndNormalizeUrl(parsed.callbackUrl, 'callbackUrl');
+        const userSessionToken = parsed.sessionToken;
 
-      sendUploadRequestWithSessionToken(fileUrl, apiUrl, userSessionToken)
-        .then(result => console.log('Callback response:', result))
-        .catch(error => console.error('Upload request failed:', error));
+        sendUploadRequestWithSessionToken(fileUrl, apiUrl, userSessionToken)
+          .then(result => console.log('Callback response:', result))
+          .catch(error => console.error('Upload request failed:', error));
 
-
-    } catch (err) {
-      console.error('Failed to parse header JSON:', err);
+      } catch (err) {
+        console.error('Failed to parse header JSON or validate URLs:', err);
+      }
     }
-  }
 
     console.log('Return message: ', getFileResult)
     return res.json(getFileResult);
@@ -36,17 +35,50 @@ export const getFile = (req: IReq<GetFileBody>, res: IRes) => {
     return res.json(getFileResult);
   }
 
-
-    function processData(data: string | string[] | ArrayBufferView<ArrayBufferLike>) {
-        if (typeof data === 'string') {
-            return data;
-        } else if (Array.isArray(data)) {
-            const combinedString = data.join('');
-            return combinedString;
-        } else {
-            return "blank";
-        }
+  function validateAndNormalizeUrl(rawUrl: string, paramName: string): string {
+    if (typeof rawUrl !== 'string') {
+      throw new Error(`Invalid ${paramName}: expected string`);
     }
+
+    let url: URL;
+    try {
+      url = new URL(rawUrl);
+    } catch {
+      throw new Error(`Invalid ${paramName}: malformed URL`);
+    }
+
+    // Only allow HTTP(S) URLs
+    if (url.protocol !== 'http:' && url.protocol !== 'https:') {
+      throw new Error(`Invalid ${paramName}: unsupported protocol`);
+    }
+
+    // Allow-list host/domain as appropriate for your environment.
+    // Example: restrict to your own domain or a trusted provider.
+    const allowedHosts = ['example.com']; // TODO: replace with real allowed host(s)
+    const allowedHostSuffixes = ['.example.com']; // TODO: replace with real allowed suffix(es)
+    const hostname = url.hostname.toLowerCase();
+
+    const hostAllowed =
+      allowedHosts.includes(hostname) ||
+      allowedHostSuffixes.some(suffix => hostname.endsWith(suffix));
+
+    if (!hostAllowed) {
+      throw new Error(`Invalid ${paramName}: host not allowed`);
+    }
+
+    return url.toString();
+  }
+
+  function processData(data: string | string[] | ArrayBufferView<ArrayBufferLike>) {
+    if (typeof data === 'string') {
+      return data;
+    } else if (Array.isArray(data)) {
+      const combinedString = data.join('');
+      return combinedString;
+    } else {
+      return "blank";
+    }
+  }
 
   async function sendUploadRequestWithSessionToken(uploadUrl: string, callbackUrl: string, sessionToken: string): Promise<any> {
   try {
